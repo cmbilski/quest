@@ -31,7 +31,9 @@ public class Input_Quest implements InputProcessor {
 
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
+		if (character == ' ' && map.getTurn() == 0) {
+			map.endTurn();
+		}
 		return false;
 	}
 

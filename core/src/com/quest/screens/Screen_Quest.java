@@ -26,8 +26,13 @@ public class Screen_Quest implements Screen {
 	private OrthogonalTiledMapRenderer mapRenderer;
 	private EntityRenderer entityRenderer;
 	
-	public Texture clickedGridTexture = new Texture("sprites/click.png");
-	
+	private Texture clickedGridTexture = new Texture(Gdx.files.internal("sprites/click.png"));
+	private int lastTurn;
+	private float turnSpriteRender;
+	private Texture [] turnSprites = {
+			new Texture(Gdx.files.internal("sprites/player1_turn.png")),
+			new Texture(Gdx.files.internal("sprites/player2_turn.png"))};
+
 	public Screen_Quest() {
 		map = new GameMap(MAP_SIZE);
 		
@@ -45,6 +50,9 @@ public class Screen_Quest implements Screen {
 		
 		Input_Quest input = new Input_Quest(this, map);
 		Gdx.input.setInputProcessor(input);
+
+		lastTurn = -1;
+		turnSpriteRender = -1;
 	}
 
 	public Vector2 getGameCoordsFromClick(int x, int y) {
@@ -62,11 +70,13 @@ public class Screen_Quest implements Screen {
 
 	@Override
 	public void render(float delta) {
+		map.update(delta);
+
 		mapRenderer.setView(camera);
 		mapRenderer.render();
-		
+
 		batch.begin();
-		renderEntities();
+		renderEntities(delta);
 		
 		Vector2 clicked;
 		if ((clicked= map.getClicked()) != null) {
@@ -74,14 +84,30 @@ public class Screen_Quest implements Screen {
 			float adjY = (float) (Math.floor(clicked.y) * Tile.TILE_SIZE - (camera.position.y - TILES_TO_RENDER * Tile.TILE_SIZE / 2f));
 			batch.draw(clickedGridTexture, adjX, adjY);
 		}
+
+		int curTurn = map.getTurn();
+		if (curTurn != lastTurn) {
+			lastTurn = curTurn;
+			turnSpriteRender = 1.5f;
+			System.out.println("Turn swap");
+		}
+
+		if (turnSpriteRender > 0) {
+			batch.draw(this.turnSprites[lastTurn], Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+			turnSpriteRender -= delta;
+		}
+
 		batch.end();
 	}
 
-	private void renderEntities() {
+	private void renderEntities(float delta) {
 		Rectangle viewport = getCameraRectangle();
 		
 		for (Entity e: map.getPlayerEntities()) {
-			entityRenderer.render(batch, e, viewport);
+			entityRenderer.render(batch, e, viewport, delta);
+		}
+		for (Entity e: map.getEnemyEntities()) {
+			entityRenderer.render(batch, e, viewport, delta);
 		}
 	}
 	

@@ -17,7 +17,7 @@ public class Input_Quest_Entity implements InputProcessor {
 		this.map = map;
 		this.screen = screen;
 		
-		map.generateMovementLayer();
+		map.generateEntityOptions();
 	}
 	
 	public boolean keyDown(int keycode) {
@@ -41,10 +41,13 @@ public class Input_Quest_Entity implements InputProcessor {
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		screenY = Gdx.graphics.getHeight() - screenY;
 		if (button == 1) {
-			map.destroyMovementLayer();
+			map.clearClicked();
 			Gdx.input.setInputProcessor(input);
 		} else if (button == 0) {
-			map.entityClick(screen.getGameCoordsFromClick(screenX, screenY).scl(1f / Tile.TILE_SIZE));
+			if (map.entityClick(screen.getGameCoordsFromClick(screenX, screenY).scl(1f / Tile.TILE_SIZE))) {
+				map.clearClicked();
+				Gdx.input.setInputProcessor(input);
+			}
 		}
 		
 		return false;

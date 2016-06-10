@@ -19,7 +19,10 @@ public class Tile extends StaticTiledMapTile {
 		this.passable = passable;
 	}
 
-	public static final Tile GRASS_TILE = new Tile(AssetManager.getRegion(0, 0, TILE_SIZE), 0); 
+	public static final Tile GRASS_TILE = new Tile(AssetManager.getRegion(0, 0, TILE_SIZE), 0);
+	public static final Tile WATER_TILE = new Tile(AssetManager.getRegion(0, 3, TILE_SIZE), 1);
 	public static final Tile GRID_TILE = new Tile(AssetManager.getRegion(4, 0, TILE_SIZE), 0);
-	public static final Tile MOVE_TILE = new Tile(AssetManager.getRegion(0, 4, TILE_SIZE), 0);
+	public static final Tile MOVE_TILE = new Tile(AssetManager.getRegion(2, 4, TILE_SIZE), 0);
+    public static final Tile ATTACK_TILE = new Tile(AssetManager.getRegion(3, 4, TILE_SIZE), 0);
+	public static final Tile FRIENDLY_TILE = new Tile(AssetManager.getRegion(4, 4, TILE_SIZE), 0);
 }
