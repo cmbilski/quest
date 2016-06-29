@@ -74,6 +74,9 @@ public class EntityRenderer {
             ArrayList<Animation []> animations = this.animations.get(entity.getClass());
             int entID = entity.getID();
             int entState = entity.state;
+            if (entState >= animations.size()) {
+                entState = EntityStates.IDLE;
+            }
 
             // Are we transitioning?
             Float time = 0f;

@@ -31,6 +31,8 @@ public class GameMap {
 	private int turn;
     private boolean canClick;
 
+	private boolean tryEndTurn;
+
     private AI enemyAI;
 
 	public GameMap(int size) {
@@ -163,7 +165,7 @@ public class GameMap {
         }
 		ArrayList<Entity> attackOptions = new ArrayList<Entity>();
 		for (int i = 0; i < entities.size(); i++) {
-			if (entity.getWeapon().inAttackRange(entities.get(i))) {
+			if (entity.getWeapon().inAttackRange(entities.get(i)) && !entity.isDead()) {
 				attackOptions.add(entities.get(i));
 			}
 		}
@@ -339,10 +341,28 @@ public class GameMap {
 	}
 
     public void update(float delta) {
+		cleanDeadEntities();
+
         if (turn == 0) {
             tryEndTurn();
         } else if (turn == 1 && enemyAI != null) {
             enemyAI.update(delta);
         }
     }
+
+	private void cleanDeadEntities() {
+		for (int i = 0; i < playerEntities.size(); i++) {
+			if (playerEntities.get(i).state == EntityStates.DEAD) {
+				playerEntities.remove(i);
+				i--;
+			}
+		}
+
+		for (int i = 0; i < enemyEntities.size(); i++) {
+			if (enemyEntities.get(i).state == EntityStates.DEAD) {
+				enemyEntities.remove(i);
+				i--;
+			}
+		}
+	}
 }

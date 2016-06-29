@@ -67,7 +67,7 @@ public class AI {
     }
 
     private void calculateAttack(Entity ent) {
-        Entity closestEntity = findClosestEntity(ent, true);
+        Entity closestEntity = findClosestEntity(ent, ent.getWeapon().getTargetType() == Weapon.TARGET_ENEMY);
         if (getDistanceBetweenEntities(ent, closestEntity) <= ent.getWeapon().getRange() * ent.getWeapon().getRange()) {
             ent.interact(closestEntity);
         } else {
@@ -107,6 +107,10 @@ public class AI {
 
         // Find the movement option which is closest
         ArrayList<MovementOption> movementOptions = map.generateMovementOptions(ent);
+        if (movementOptions.isEmpty()) {
+            waitingForMove = true;
+            return;
+        }
 
         MovementOption curLocation = new MovementOption((ent.getX()), ent.getY());
         MovementOption opt = findClosestMovementOption(movementOptions, closestEnt);

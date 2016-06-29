@@ -69,6 +69,9 @@ public class Entity {
 
     public void interact(Entity ent) {
         ent.stats.modifyHealth(stats.getCurPower());
+        if (ent.isDead()) {
+            ent.state = EntityStates.DEAD;
+        }
         hasAttacked = true;
     }
 
@@ -90,7 +93,7 @@ public class Entity {
     }
 
     public boolean isDead() {
-        return stats.getCurHealth() > 0;
+        return stats.getCurHealth() <= 0;
     }
 
     public Entity_Stats getStats() {
